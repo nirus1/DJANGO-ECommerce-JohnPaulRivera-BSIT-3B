@@ -1,0 +1,149 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+	<!-- Checkout Form -->
+	<div class="col-lg-6 mb-4">
+		<div class="card shadow-sm border-0">
+			<div class="card-body">
+				<h4 class="card-title mb-3 text-primary">Shipping & Checkout</h4>
+				<form id="form">
+
+					{% if not request.user.is_authenticated %}
+					<div id="user-info">
+						<div class="mb-3">
+							<input required class="form-control" type="text" name="name" placeholder="Full Name">
+						</div>
+						<div class="mb-3">
+							<input required class="form-control" type="email" name="email" placeholder="Email">
+						</div>
+					</div>
+					{% endif %}
+
+					<hr class="text-muted">
+					<p class="mb-2 fw-semibold">Shipping Information:</p>
+
+					<div id="shipping-info">
+						<div class="mb-3">
+							<input required class="form-control" type="text" name="address" placeholder="Address">
+						</div>
+						<div class="mb-3">
+							<input required class="form-control" type="text" name="city" placeholder="City">
+						</div>
+						<div class="mb-3">
+							<input required class="form-control" type="text" name="state" placeholder="Province">
+						</div>
+						<div class="mb-3">
+							<input required class="form-control" type="text" name="zipcode" placeholder="Postal Code">
+						</div>
+					</div>
+
+					<hr>
+					<input id="form-button" class="btn btn-success w-100" type="submit" value="Place Order">
+					<p class="mt-3 text-muted small">You will pay <strong>₱{{order.get_cart_total|floatformat:2}}</strong> in cash upon delivery.</p>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Order Summary -->
+	<div class="col-lg-6">
+		<div class="card shadow-sm border-0">
+			<div class="card-body">
+				<a class="btn btn-outline-primary mb-3" href="{% url 'cart' %}">&#x2190; Back to Cart</a>
+				<h4 class="card-title text-primary">Order Summary</h4>
+				<hr>
+
+				{% for item in items %}
+				<div class="d-flex align-items-center mb-3 border-bottom pb-2">
+					<img class="me-3" style="width: 60px; height: 60px; object-fit: cover;" src="{{ item.product.imageURL }}">
+					<div class="flex-grow-1">
+						<p class="mb-0 fw-semibold">{{ item.product.name }}</p>
+						<small class="text-muted">₱{{ item.product.price|floatformat:2 }} × {{ item.quantity }}</small>
+					</div>
+				</div>
+				{% endfor %}
+
+				<div class="mt-3">
+					<h6>Items: {{ order.get_cart_items }}</h6>
+					<h5 class="text-success">Total: ₱{{ order.get_cart_total|floatformat:2 }}</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- CSRF token helper -->
+<script type="text/javascript">
+function getCookie(name) {
+	let cookieValue = null;
+	if (document.cookie && document.cookie !== '') {
+		const cookies = document.cookie.split(';');
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			if (cookie.substring(0, name.length + 1) === (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+</script>
+
+<!-- COD Form Submission -->
+<script type="text/javascript">
+
+
+	var form = document.getElementById('form');
+	form.addEventListener('submit', function(e){
+		e.preventDefault();
+		console.log('Form submitted...');
+		submitFormData();
+	});
+
+	function submitFormData(){
+		var userFormData = {
+			'name': form.name ? form.name.value : '',
+			'email': form.email ? form.email.value : '',
+			'total': '{{order.get_cart_total}}',
+			'payment_method': 'COD'
+		};
+
+		var shippingInfo = {
+			'address': form.address.value,
+			'city': form.city.value,
+			'state': form.state.value,
+			'zipcode': form.zipcode.value
+		};
+
+		fetch('/process_order/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRFToken': csrftoken,
+			},
+			body: JSON.stringify({
+				form: userFormData,
+				shipping: shippingInfo
+			})
+		})
+		.then((response) => response.json())
+		.then((data) => {
+	Swal.fire({
+		title: 'Success!',
+		text: 'Order placed successfully!',
+		icon: 'success',
+		confirmButtonText: 'OK'
+	}).then(() => {
+		cart = {};
+		document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/";
+		window.location.href = "{% url 'store' %}";
+	});
+	});
+
+	}
+</script>
+{% endblock content %}
