@@ -1,35 +1,36 @@
-# 🛒 Django E-Commerce Project  
-**John Paul Rivera | BSIT 3B**
+🛒 Django E-Commerce Application
+John Paul Rivera | BSIT 3B
 
-This is a simple yet functional E-Commerce web application built with Django. It supports features like browsing products, adding items to cart, checking out with shipping details, and placing orders using **Cash on Delivery (COD)**.
+This project is a basic yet practical E-Commerce web application built with Django. It includes core functionalities such as product browsing, cart management, guest checkout, and order placement using Cash on Delivery (COD).
 
----
+🔧 Key Features
+✅ Product Display with Images
 
-## 🔧 Features
+✅ Add to Cart / Remove from Cart
 
-- ✅ Product Listing & Image Support
-- ✅ Add/Remove Items from Cart
-- ✅ Guest Checkout (no login required)
-- ✅ Cash on Delivery (COD) Payment Method
-- ✅ Shipping Address Collection
-- ✅ Admin Panel for Managing Orders & Products
+✅ Guest Checkout (no user login needed)
 
----
+✅ Payment via Cash on Delivery (COD)
 
-## 🖥️ Technologies Used
+✅ Collect Shipping Information
 
-- Python 3.x  
-- Django 3.x or 4.x  
-- HTML / CSS / Bootstrap  
-- JavaScript (vanilla)  
-- SQLite (default Django DB)
+✅ Admin Dashboard for Product & Order Management
 
----
+🖥️ Tech Stack
+Python 3.x
 
-## 🚀 Installation Guide
+Django 3.x or 4.x
 
-### 1. Clone the Repository
+HTML / CSS / Bootstrap
 
-```bash
+Vanilla JavaScript
+
+SQLite (Django's default database)
+
+🚀 Getting Started
+1. Clone the Repository
+bash
+Copy
+Edit
 git clone https://github.com/nirus1/DJANGO-ECommerce-John-Paul-Rivera-BSIT-3B.git
 cd DJANGO-ECommerce-John-Paul-Rivera-BSIT-3B
